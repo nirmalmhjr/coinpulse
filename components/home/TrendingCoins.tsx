@@ -5,15 +5,23 @@ import { TrendingDown, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { fetcher } from '@/coingecko.action'
+import { TrendingCoinsFallback } from '@/app/Fallback'
 
 const TrendingCoins = async () => {
-  const trendingCoins = await fetcher<{ coins: TrendingCoin[] }>(
-    'search/trending',
-    undefined,
-    300
-  )
+  let trendingCoins
 
-  console.log('trendingcoin ', trendingCoins)
+  try {
+    trendingCoins = await fetcher<{ coins: TrendingCoin[] }>(
+      'search/trending',
+      undefined,
+      300
+    )
+
+    console.log('trendingcoin ', trendingCoins)
+  } catch (error) {
+    console.log('Error fetching TrendingCoins: ', error)
+    return <TrendingCoinsFallback />
+  }
 
   const columns: DataTableColumn<TrendingCoin>[] = [
     {
@@ -63,40 +71,40 @@ const TrendingCoins = async () => {
     },
   ]
 
-  const dummyTrendingCoins: TrendingCoin[] = [
-    {
-      item: {
-        id: 'bitcoin',
-        name: 'Bitcoin',
-        symbol: 'BTC',
-        market_cap_rank: 1,
-        thumb: '/logo.svg',
-        large: '/logo.svg',
-        data: {
-          price: 89113.0,
-          price_change_percentage_24h: {
-            usd: 2.5,
-          },
-        },
-      },
-    },
-    {
-      item: {
-        id: 'bitcoin',
-        name: 'Bitcoin',
-        symbol: 'BTC',
-        market_cap_rank: 1,
-        thumb: '/logo.svg',
-        large: '/logo.svg',
-        data: {
-          price: 89113.0,
-          price_change_percentage_24h: {
-            usd: 0,
-          },
-        },
-      },
-    },
-  ]
+  // const dummyTrendingCoins: TrendingCoin[] = [
+  //   {
+  //     item: {
+  //       id: 'bitcoin',
+  //       name: 'Bitcoin',
+  //       symbol: 'BTC',
+  //       market_cap_rank: 1,
+  //       thumb: '/logo.svg',
+  //       large: '/logo.svg',
+  //       data: {
+  //         price: 89113.0,
+  //         price_change_percentage_24h: {
+  //           usd: 2.5,
+  //         },
+  //       },
+  //     },
+  //   },
+  //   {
+  //     item: {
+  //       id: 'bitcoin',
+  //       name: 'Bitcoin',
+  //       symbol: 'BTC',
+  //       market_cap_rank: 1,
+  //       thumb: '/logo.svg',
+  //       large: '/logo.svg',
+  //       data: {
+  //         price: 89113.0,
+  //         price_change_percentage_24h: {
+  //           usd: 0,
+  //         },
+  //       },
+  //     },
+  //   },
+  // ]
   return (
     <div id="trending-coins">
       <h4>Trending Coins</h4>
